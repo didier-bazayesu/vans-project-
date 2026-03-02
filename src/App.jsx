@@ -3,6 +3,7 @@ import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import NavbarVan from './components/NavbarVan'
 import Home from './pages/Home'
 import About from './pages/About'
+import Vans from './pages/Vans'
 
 function App() {
   return (
@@ -10,8 +11,10 @@ function App() {
       <BrowserRouter>
         <NavbarVan/>
         <Routes>
-           <Route path='/' element={<Home/>}/>
-           <Route path='about' element={<About/>} />
+          <Route path='/' element={<Home/>}/>
+          <Route path='about' element={<About/>} />
+          <Route path='vans' element={<Vans/>} />
+
         </Routes>
        
         
