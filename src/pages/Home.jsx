@@ -5,7 +5,7 @@ import images from '../assets/image.png'
 export default function Home() {
     return (
         <div 
-          className=" bg-cover bg-center h-[430.1px] text-white text-right flex flex-col justify-center items-center space-y-5 pr-5 md:pr-0"
+          className=" bg-cover bg-center min-h-screen h-[430.1px] text-white text-right flex flex-col justify-center items-center space-y-5 pr-5 md:pr-0"
           style={{ backgroundImage: `url(${images})` }}
 
         >
