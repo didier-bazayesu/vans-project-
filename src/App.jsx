@@ -1,28 +1,55 @@
 import React from 'react'
-import { BrowserRouter,Routes,Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import NavbarVan from './components/NavbarVan'
 import Home from './pages/Home'
 import About from './pages/About'
 import Vans from './pages/Vans'
+import VanDetails from './pages/VanDetails'
+import RoutePage from './pages/RoutePage'
+import Layqout from './components/Layqout'
+import Income from './pages/host/Income'
+import  Reviews from './pages/host/Reviews'
+import  Dashboard from './pages/host/Dashboard'
+import  HostVans from './pages/host/HostVans'
+import HostVansDetails from './pages/HostVansDetails'
+import HostLayout from './components/HostLayout'
+
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <NavbarVan/>
-        <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='about' element={<About/>} />
-          <Route path='vans' element={<Vans/>} />
+    <BrowserRouter cl>
+      
+      <div >
 
-        </Routes>
-       
         
-        <footer className='bg-[#252525] h-20 flex items-center justify-center text-white'> &copy; {new Date().getFullYear()} Bazayesu Didier.#VANLIFE </footer>
+        <main className="grow">
+          <Routes>
+            <Route path='/'  element={<Layqout/>}>
+              <Route path='about' element={<About />} />
+              <Route index element={<Home />} />
+              <Route path='vans' element={<Vans />} />
+              <Route path='vans/:id' element={<VanDetails />}/>
+              <Route path='vans/:id/Routecomponent' element={<RoutePage/>}></Route>
 
-      </BrowserRouter>
-    </>
-    
+             
+              <Route path="host" element={<HostLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route  path="income" element={<Income />} />
+                <Route path="vans" element={<HostVans />} />
+                 <Route path="vans/:id" element={<HostVansDetails />} />
+                <Route path="reviews" element={<Reviews />} />
+                
+              </Route>
+
+
+            </Route>
+          </Routes>
+        </main>
+
+       
+
+      </div>
+    </BrowserRouter>
   )
 }
 
