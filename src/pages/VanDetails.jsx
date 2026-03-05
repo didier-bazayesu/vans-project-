@@ -7,12 +7,16 @@ import { useState, useEffect } from 'react'
 function VanDetails() {
   const getLocation = useLocation();
   
+  console.log(getLocation)
+  
  
   let [van, setVanDetail] = useState(null)
   const params = useParams()
+ 
 
   useEffect(() => {
     fetch(`/api/vans/${params.id}`)
+      
       .then(res => res.json())
       .then(data => setVanDetail(data.vans))
   }, [params.id])
@@ -26,7 +30,7 @@ function VanDetails() {
         className="text-gray-500 hover:text-black transition-colors mb-8 inline-block"
       >
         &larr; <span className="underline decoration-1 underline-offset-4">
-          Back to all vans
+          {`Back to all ${getLocation.state.name?getLocation.state.name:"vans"}`}
         </span>
       </Link>
       
