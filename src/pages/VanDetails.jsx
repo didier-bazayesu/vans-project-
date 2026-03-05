@@ -1,8 +1,13 @@
 import React from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link,useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
+
+
 function VanDetails() {
+  const getLocation = useLocation();
+  
+ 
   let [van, setVanDetail] = useState(null)
   const params = useParams()
 
@@ -16,11 +21,15 @@ function VanDetails() {
     <div className="max-w-6xl mx-auto p-6 md:py-12">
      
       <Link 
-        to="/vans" 
+        to={`..${getLocation.state.search}`}
+        relative="path"
         className="text-gray-500 hover:text-black transition-colors mb-8 inline-block"
       >
-        &larr; <span className="underline decoration-1 underline-offset-4">Back to all vans</span>
+        &larr; <span className="underline decoration-1 underline-offset-4">
+          Back to all vans
+        </span>
       </Link>
+      
 
       {van ? (
         (() => {
