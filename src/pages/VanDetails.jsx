@@ -1,0 +1,110 @@
+import React from 'react'
+import { useParams, Link,useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+
+
+
+function VanDetails() {
+  const getLocation = useLocation();
+  
+  console.log(getLocation)
+  
+ 
+  let [van, setVanDetail] = useState(null)
+  const params = useParams()
+ 
+
+  useEffect(() => {
+    fetch(`/api/vans/${params.id}`)
+      
+      .then(res => res.json())
+      .then(data => setVanDetail(data.vans))
+  }, [params.id])
+
+  return (
+    <div className="max-w-6xl mx-auto p-6 md:py-12">
+     
+      <Link 
+        to={`..${getLocation.state.search}`}
+        relative="path"
+        className="text-gray-500 hover:text-black transition-colors mb-8 inline-block"
+      >
+        &larr; <span className="underline decoration-1 underline-offset-4">
+          {`Back to all ${getLocation.state.name?getLocation.state.name:"vans"}`}
+        </span>
+      </Link>
+      
+
+      {van ? (
+        (() => {
+          const typeClass =
+            van.type === "simple"
+              ? "bg-[#E17654]"
+              : van.type === "rugged"
+              ? "bg-[#115E59]"
+              : "bg-[#161616]"
+
+          return (
+            <div className="flex flex-col lg:flex-row gap-12 mt-4">
+              
+             
+              <div className="w-full lg:w-1/2">
+                <img
+                  src={van.imageUrl}
+                  alt={van.name}
+                  className="w-full rounded-2xl shadow-lg object-cover aspect-4/3"
+                />
+              </div>
+
+             
+              <div className="w-full lg:w-1/2 flex flex-col justify-center">
+                <div className="space-y-6">
+                  <span className={`inline-block py-1 px-5 rounded-lg text-white font-medium capitalize ${typeClass}`}>
+                    {van.type}
+                  </span>
+
+                  <h1 className="text-4xl font-extrabold text-[#161616]">
+                    {van.name}
+                  </h1>
+
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-bold">${van.price}</span>
+                    <span className="text-gray-500 text-lg">/day</span>
+                  </div>
+
+                  <p className="text-gray-700 leading-relaxed text-lg italic border-l-4 border-gray-200 pl-4">
+                    {van.description}
+                  </p>
+
+                 
+                  <div className="grid grid-cols-2 gap-4 py-6 border-y border-gray-100">
+                    <div>
+                        <p className="text-sm text-gray-400 uppercase tracking-wider">Availability</p>
+                        <p className="font-semibold text-green-600">Instantly Bookable</p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-400 uppercase tracking-wider">Transmission</p>
+                        <p className="font-semibold">Automatic</p>
+                    </div>
+                  </div>
+
+                  <button className="bg-[#FF8C38] hover:bg-[#e67e32] transition-all w-full py-4 rounded-xl text-white font-bold text-xl shadow-md active:scale-95 cursor-pointer">
+                    Rent this van
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          )
+        })()
+      ) : (
+        <div className="flex flex-col items-center justify-center h-64 space-y-4">
+            <div className="w-12 h-12 border-4 border-gray-200 border-t-[#FF8C38] rounded-full animate-spin"></div>
+            <p className="text-gray-500 animate-pulse">Loading van details...</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default VanDetails
