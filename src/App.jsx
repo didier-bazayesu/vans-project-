@@ -6,7 +6,7 @@ import About from './pages/About'
 import Vans from './pages/Vans'
 import VanDetails from './pages/VanDetails'
 import RoutePage from './pages/RoutePage'
-import Layqout from './components/Layqout'
+import Layqout from './components/Layout'
 import Income from './pages/host/Income'
 import  Reviews from './pages/host/Reviews'
 import  Dashboard from './pages/host/Dashboard'
@@ -16,6 +16,7 @@ import HostLayout from './components/HostLayout'
 import HostVanPricing from './pages/host/HostVanPricing'
 import HostVanPhotos from './pages/host/HostVanPhotos'
 import HostVaninfo from './pages/host/HostVaninfo'
+import NotPagefound from './pages/NotPagefound'
 
 
 function App() {
@@ -28,7 +29,9 @@ function App() {
         
         <main className="grow">
           <Routes>
+
             <Route path='/'  element={<Layqout/>}>
+
               <Route path='about' element={<About />} />
               <Route index element={<Home />} />
               <Route path='vans' element={<Vans />} />
@@ -46,11 +49,10 @@ function App() {
                   <Route index element={<HostVaninfo/>} />
                 </Route>
                 <Route path="reviews" element={<Reviews />} />
-
-                
               </Route>
 
 
+              <Route path='*'  element={<NotPagefound/>}/>
             </Route>
           </Routes>
         </main>
