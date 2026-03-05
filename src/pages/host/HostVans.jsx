@@ -16,7 +16,7 @@ function HostVans() {
 
     const hostVansEls = vans.map(van => (
     <Link
-        to={`/host/vans/${van.id}`}
+        to={van.id}
         key={van.id}
         className="hover:text-2xl hover:text-red-300 "
     >
