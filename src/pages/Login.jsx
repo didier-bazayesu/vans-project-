@@ -1,19 +1,27 @@
-import React from "react"
-import { useNavigate, useSearchParams, useLocation } from "react-router-dom"
+import React, { useState } from "react"
+import { useNavigate, useSearchParams, useLocation, useLoaderData, data } from "react-router-dom"
+import { loginUser } from "../mirageLibrary/API";
+
+export function loader({request}){
+      const url = new URL(request.url);
+     const message = url.searchParams.get("message")
+     return message
+}
 
 export default function Login() {
+    const  message = useLoaderData();
     const [loginFormData, setLoginFormData] = React.useState({ email: "", password: "" })
-    const [searchParams] = useSearchParams()
-    const navigate = useNavigate()
-    const location = useLocation()
-
-    const redirectTo = searchParams.get("redirectTo") || "/host"
-    const message = location.state?.message  // 👈 read message
+    const [error ,setError] = useState(null)
+    const [status ,setStatus] = useState('Idle')
 
     function handleSubmit(e) {
         e.preventDefault()
-        navigate(redirectTo)
+        setStatus("submitting...")
+        loginUser(loginFormData).then(data=>console.log(data)).catch(error=>  setError(error)).finally(()=>{setStatus("Idle")})
     }
+    
+ 
+
 
     function handleChange(e) {
         const { name, value } = e.target
@@ -23,6 +31,8 @@ export default function Login() {
         }))
     }
 
+   
+
     return (
         <div className="login-container">
             {/* 👇 show message if exists */}
@@ -31,6 +41,7 @@ export default function Login() {
                     {message}
                 </p>
             )}
+            {error&& <h1 className="text-red-400 ">{error.message}</h1>}
             <h1 className="font-bold text-3xl mt-10 mb-10">Sign in to your account</h1>
             <form onSubmit={handleSubmit} className="login-form">
                 <input
@@ -47,7 +58,10 @@ export default function Login() {
                     placeholder="Password"
                     value={loginFormData.password}
                 />
-                <button>Log in</button>
+                <button  disabled={status === "submitting..."}>{status === "submitting..." 
+                        ? "Logging in..." 
+                        : "Log in"
+                }</button>
             </form>
         </div>
     )
