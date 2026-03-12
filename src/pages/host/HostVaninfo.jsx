@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom'
 
 function HostVaninfo() {
     let informations = useOutletContext() ;
-    console.log(informations.description);
+   
     
     return (
         <div className="space-y-4 text-[#161616] mt-10">

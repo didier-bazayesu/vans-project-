@@ -1,33 +1,21 @@
 import { useEffect, useState } from "react"
-import { Link, NavLink } from "react-router-dom" // Don't forget to import this!
-import { useSearchParams } from "react-router-dom"
+import { Link, NavLink,useLoaderData, useSearchParams } from "react-router-dom" // Don't forget to import this!
 import getVans from "../mirageLibrary/API";
 
+
+
+export function loader(){
+    return  getVans()
+}
+
 export default function Vans() {
-    let[isLoading ,setisLoading ] =useState(false);
-    let[error,setError] = useState(null);
-    const [vans, setVans] = useState([])
+
     const[params , setParams] = useSearchParams();
     let type = params.get('type')
     type = type !== null? type.toLowerCase(): ''
 
-    useEffect(() => {
-        async function loadVans() {
-            setisLoading(true);
-            try{
-                const data = await getVans()
-                setVans(data)
 
-            }catch(error){
-                setError(error);
-            }finally{
-                setisLoading(false);
-
-            }
-        }
-        
-        loadVans()
-    }, [])
+    const vans = useLoaderData();
      
     const displayedVans = type
     ? vans.filter(van => van.type === type)
@@ -68,16 +56,16 @@ export default function Vans() {
     })
 
 
-    if(error) return <div aria-live="polite">
-                          <p className="font-bold"> {`Error${error.status} : `}  {error.message}</p>
-                          <Link className=" text-blue-500 underline" to='/'>return home</Link>
-                    </div> 
-    if(isLoading) {
-        return  <div aria-live="assertive" className="flex flex-col items-center justify-center h-64 space-y-4">
-                    <div className="w-12 h-12 border-4 border-gray-200 border-t-[#FF8C38] rounded-full animate-spin"></div>
-                    <p className="text-gray-500 animate-pulse">Loading  all vans...</p>
-                </div>
-    }
+    // if(error) return <div aria-live="polite">
+    //                       <p className="font-bold"> {`Error${error.status} : `}  {error.message}</p>
+    //                       <Link className=" text-blue-500 underline" to='/'>return home</Link>
+    //                 </div> 
+    // if(isLoading) {
+    //     return  <div aria-live="assertive" className="flex flex-col items-center justify-center h-64 space-y-4">
+    //                 <div className="w-12 h-12 border-4 border-gray-200 border-t-[#FF8C38] rounded-full animate-spin"></div>
+    //                 <p className="text-gray-500 animate-pulse">Loading  all vans...</p>
+    //             </div>
+    // }
     
     return (
         <> 

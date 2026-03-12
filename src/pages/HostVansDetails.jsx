@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import {  useParams,Link, Outlet ,NavLink} from 'react-router-dom'
-function HostVansDetails() {
-  let[currentVan,setCurrentVan] = useState(null);
-   const {id} = useParams();
-  useEffect(()=>{
-        fetch(`/api/host/vans/${id}`).then(resp=> resp.json())
-                                      .then(data => setCurrentVan(data.vans))
-  },[id])
-  
+import {  useParams,Link, Outlet ,NavLink,useLoaderData} from 'react-router-dom'
+import {getHostVans} from '../mirageLibrary/API';
 
-  if(!currentVan) return <h1 className='text-2xl font-bold'>Loading.......</h1>
-    
+
+export function loader ({params}){
+        console.log(params)
+        return getHostVans(params.id);
+}
+
+function HostVansDetails() {  
+   const  currentVan = useLoaderData();
   return (
     <>
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import imageUrl from '../assets/people.png'
 
 function NavbarVan() {
     return (
@@ -31,6 +32,14 @@ function NavbarVan() {
                 >
                     Vans
                 </NavLink>
+
+                <Link to="login" className="login-link rounded-full" >
+                    <img 
+                        src={imageUrl} width={40} height={40}
+                        
+                        className="login-icon object-cover"
+                    />
+                </Link>
             </nav>
         </header>
     )

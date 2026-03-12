@@ -1,25 +1,18 @@
 import React from 'react'
-import { useParams, Link,useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import {  Link,useLocation } from 'react-router-dom'
+
+import getVans from '../mirageLibrary/API';
+import { useLoaderData } from 'react-router-dom';
+
+export function loader({params}){
+ return getVans(params.id)
+}
 
 
 
 function VanDetails() {
   const getLocation = useLocation();
-  
-  console.log(getLocation)
-  
- 
-  let [van, setVanDetail] = useState(null)
-  const params = useParams()
- 
-
-  useEffect(() => {
-    fetch(`/api/vans/${params.id}`)
-      
-      .then(res => res.json())
-      .then(data => setVanDetail(data.vans))
-  }, [params.id])
+   const van = useLoaderData()
 
   return (
     <div className="max-w-6xl mx-auto p-6 md:py-12">
@@ -35,7 +28,7 @@ function VanDetails() {
       </Link>
       
 
-      {van ? (
+      { (
         (() => {
           const typeClass =
             van.type === "simple"
@@ -97,11 +90,6 @@ function VanDetails() {
             </div>
           )
         })()
-      ) : (
-        <div className="flex flex-col items-center justify-center h-64 space-y-4">
-            <div className="w-12 h-12 border-4 border-gray-200 border-t-[#FF8C38] rounded-full animate-spin"></div>
-            <p className="text-gray-500 animate-pulse">Loading van details...</p>
-        </div>
       )}
     </div>
   )

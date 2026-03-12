@@ -3,6 +3,7 @@ import { createServer, Model,Response } from "miragejs"
 createServer({
     models: {
         vans: Model,
+        user: Model,
     },
 
     seeds(server) {
@@ -21,15 +22,14 @@ createServer({
         server.create("van", { id: "13", name: "Rustic Rover", price: 65, description: "Vintage feel with modern mechanics. Simple, reliable, and full of character.", imageUrl: "https://assets.scrimba.com/advanced-react/react-router/green-wonder.png", type: "simple" })
         server.create("van", { id: "14", name: "Trail Titan", price: 110, description: "Reinforced chassis and off-road lighting for deep forest exploration.", imageUrl: "https://assets.scrimba.com/advanced-react/react-router/beach-bum.png", type: "rugged" })
         server.create("van", { id: "15", hostId: "123", name: "Cloud Nine", price: 200, description: "The pinnacle of van life. Full-sized kitchen and premium leather finishes.", imageUrl: "https://assets.scrimba.com/advanced-react/react-router/the-cruiser.png", type: "luxury" })
+        server.create("user", { id: "123", email: "didierbazayesu@gmail.com", password: "123", name: "didier" })
     },
 
     routes() {
         this.namespace = "api"
         this.logging = false
-        this.timing = 1500
-        this.get("/vans", (schema) => {
-             return new Response(400, {}, {error: "Error fetching data"})
-        })
+        this.timing = 500
+        this.get("/vans", (schema) => schema.vans.all())
         this.get("/vans/:id", (schema, request) => schema.vans.find(request.params.id))
         this.get("/host/vans", (schema) => {
             return schema.vans.where({ hostId: "123" })
@@ -39,6 +39,22 @@ createServer({
             // Hard-code the hostId for now
             const id = request.params.id
             return schema.vans.findBy({ id, hostId: "123" })
+        })
+
+       this.post("/login", (schema, request) => {
+            const { email, password } = JSON.parse(request.requestBody)
+            
+            const foundUser = schema.users.findBy({ email, password })
+            
+            if (!foundUser) {
+                return new Response(401, {}, { message: "No user with those credentials found!" })
+            }
+
+            foundUser.password = undefined
+            return {
+                user: foundUser,
+                token: "fake-token"
+            }
         })
     } 
 })

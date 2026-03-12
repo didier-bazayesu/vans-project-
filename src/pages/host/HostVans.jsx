@@ -1,18 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
-import { useState,useEffect } from 'react'
+
+import { Link ,useLoaderData} from 'react-router-dom';
+import getVans from '../../mirageLibrary/API';
+export function loader ({params}){
+        return getVans(params.id);
+}
 
 function HostVans() {
-    let[vans,setVans] = useState([]);
-
-    useEffect(()=>{
-        fetch('/api/host/vans')
-       .then(res => res.json())
-            .then(data => setVans(data.vans))
-
-    },[])
-
-    console.log(vans)
+     const vans= useLoaderData();
 
     const hostVansEls = vans.map(van => (
     <Link
