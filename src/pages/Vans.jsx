@@ -1,33 +1,42 @@
 import { useEffect, useState } from "react"
-import { Link, NavLink } from "react-router-dom" // Don't forget to import this!
-import { useSearchParams } from "react-router-dom"
+import { Link, NavLink,useLoaderData, useSearchParams } from "react-router-dom" // Don't forget to import this!
 import getVans from "../mirageLibrary/API";
+
+
+
+export function loader(){
+    return  getVans()
+}
 
 export default function Vans() {
     let[isLoading ,setisLoading ] =useState(false);
     let[error,setError] = useState(null);
-    const [vans, setVans] = useState([])
+    // const [vans, setVans] = useState([])
     const[params , setParams] = useSearchParams();
     let type = params.get('type')
     type = type !== null? type.toLowerCase(): ''
 
-    useEffect(() => {
-        async function loadVans() {
-            setisLoading(true);
-            try{
-                const data = await getVans()
-                setVans(data)
 
-            }catch(error){
-                setError(error);
-            }finally{
-                setisLoading(false);
+    const vans = useLoaderData();
+  
 
-            }
-        }
+    // useEffect(() => {
+    //     async function loadVans() {
+    //         setisLoading(true);
+    //         try{
+    //             const data = await getVans()
+    //             setVans(data)
+
+    //         }catch(error){
+    //             setError(error);
+    //         }finally{
+    //             setisLoading(false);
+
+    //         }
+    //     }
         
-        loadVans()
-    }, [])
+    //     loadVans()
+    // }, [])
      
     const displayedVans = type
     ? vans.filter(van => van.type === type)
