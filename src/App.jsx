@@ -19,8 +19,8 @@ import HostVanPhotos from './pages/host/HostVanPhotos'
 import HostVaninfo from './pages/host/HostVaninfo'
 import NotPagefound from './pages/NotPagefound'
 import Error from './components/Error'
-import Login from './pages/Login'
-import { requireAuth } from './auth/utilis'
+import Login,{loader as loaderLogin} from './pages/Login'
+
 import ProtectedRoute from './components/ProtectedRoute'
 import AuthRequired from './auth/AuthRequired'
 
@@ -35,7 +35,7 @@ function App() {
   {/* Public routes */}
   <Route index element={<Home />} />
   <Route path='about' element={<About />} />
-  <Route path='login' element={<Login />} />
+  <Route path='login' element={<Login />} loader={loaderLogin} />
   
   {/* Vans routes */}
   <Route path='vans' element={<Vans />} loader={vansLoader} />
