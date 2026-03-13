@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route,createRoutesFromElements, createBrowserRouter,RouterProvider } from 'react-router-dom'
-import NavbarVan from './components/NavbarVan'
+
 import Home from './pages/Home'
 import About from './pages/About'
 import Vans,{loader as vansLoader} from './pages/Vans'
@@ -19,7 +19,7 @@ import HostVanPhotos from './pages/host/HostVanPhotos'
 import HostVaninfo from './pages/host/HostVaninfo'
 import NotPagefound from './pages/NotPagefound'
 import Error from './components/Error'
-import Login,{loader as loaderLogin} from './pages/Login'
+import Login,{loader as loginLoader , action as loginAction } from './pages/Login'
 
 import ProtectedRoute from './components/ProtectedRoute'
 import AuthRequired from './auth/AuthRequired'
@@ -35,7 +35,7 @@ function App() {
   {/* Public routes */}
   <Route index element={<Home />} />
   <Route path='about' element={<About />} />
-  <Route path='login' element={<Login />} loader={loaderLogin} />
+  <Route path='login' element={<Login />  } loader={loginLoader}  action={ loginAction} />
   
   {/* Vans routes */}
   <Route path='vans' element={<Vans />} loader={vansLoader} />
