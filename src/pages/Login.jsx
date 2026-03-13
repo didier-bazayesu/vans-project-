@@ -1,68 +1,68 @@
-import React, { useState } from "react"
-import { useNavigate, useSearchParams, useLocation, useLoaderData, data } from "react-router-dom"
+import React,{useEffect} from "react"
+import { 
+  useNavigate,
+  useLoaderData,
+  Form,
+  redirect,
+  useActionData
+  ,useNavigation
+  
+} from "react-router-dom"
+
 import { loginUser } from "../mirageLibrary/API";
 
-export function loader({request}){
-      const url = new URL(request.url);
-     const message = url.searchParams.get("message")
-     return message
+export function loader({ request }) {
+  const url = new URL(request.url)
+  return url.searchParams.get("message")
 }
 
+export async function action({ request }) {
+  const formData = await request.formData()
+  const email = formData.get("email")
+  const password = formData.get("password")
+  
+
+  try {
+    const data = await loginUser({ email, password })
+    localStorage.setItem("loggedIn", "true")
+
+    if (email === data.user.email) {
+      return { success: true, user: data.user }
+    }
+
+    return { error: "Invalid credentials" }
+
+  } catch (error) {
+    return { error: error.message }
+  }
+}
+
+
 export default function Login() {
-    const  message = useLoaderData();
-    const [loginFormData, setLoginFormData] = React.useState({ email: "", password: "" })
-    const [error ,setError] = useState(null)
-    const [status ,setStatus] = useState('Idle')
+  const message = useLoaderData()
+  const result = useActionData()
+  const navigate = useNavigate()
 
-    function handleSubmit(e) {
-        e.preventDefault()
-        setStatus("submitting...")
-        loginUser(loginFormData).then(data=>console.log(data)).catch(error=>  setError(error)).finally(()=>{setStatus("Idle")})
+   useEffect(() => {
+    if (result?.success) {
+      navigate("/host/vans")
     }
-    
- 
+  }, [result, navigate])
 
+  return (
+    <div className="login-container">
 
-    function handleChange(e) {
-        const { name, value } = e.target
-        setLoginFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
-    }
+      {message && <p>{message}</p>}
+      {result?.error && <p>{result.error}</p>}
 
-   
+      <h1 className="font-bold text-3xl mt-10 mb-10">Sign in to your account</h1>
 
-    return (
-        <div className="login-container">
-            {/* 👇 show message if exists */}
-            {message && (
-                <p className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded mb-4">
-                    {message}
-                </p>
-            )}
-            {error&& <h1 className="text-red-400 ">{error.message}</h1>}
-            <h1 className="font-bold text-3xl mt-10 mb-10">Sign in to your account</h1>
-            <form onSubmit={handleSubmit} className="login-form">
-                <input
-                    name="email"
-                    onChange={handleChange}
-                    type="email"
-                    placeholder="Email address"
-                    value={loginFormData.email}
-                />
-                <input
-                    name="password"
-                    onChange={handleChange}
-                    type="password"
-                    placeholder="Password"
-                    value={loginFormData.password}
-                />
-                <button  disabled={status === "submitting..."}>{status === "submitting..." 
-                        ? "Logging in..." 
-                        : "Log in"
-                }</button>
-            </form>
-        </div>
-    )
+      <Form method="post" className="login-form">
+        <input name="email" type="email" placeholder="Email address" />
+        <input name="password" type="password" placeholder="Password" />
+
+        <button>Log in</button>
+      </Form>
+    </div>
+  )
 }
