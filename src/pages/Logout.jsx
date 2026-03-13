@@ -8,5 +8,5 @@ export default function LogoutButton() {
         navigate("/login")
     }
 
-    return <button onClick={handleLogout}>Logout</button>
+    return <button onClick={handleLogout} className="cursor-pointer hover:text-amber-500">Logout</button>
 }
