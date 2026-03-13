@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import imageUrl from '../assets/people.png'
+import Logout from '../pages/Logout'
 
 function NavbarVan() {
     return (
@@ -32,6 +33,10 @@ function NavbarVan() {
                 >
                     Vans
                 </NavLink>
+                
+                <div>
+                  <Logout/> 
+                </div>
 
                 <Link to="login" className="login-link rounded-full" >
                     <img 
@@ -40,6 +45,7 @@ function NavbarVan() {
                         className="login-icon object-cover"
                     />
                 </Link>
+
             </nav>
         </header>
     )
