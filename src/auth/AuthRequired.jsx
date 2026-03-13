@@ -1,18 +1,18 @@
 import { Outlet, Navigate, useLocation } from "react-router-dom"
 
 export default function AuthRequired() {
-    const isLoggedIn = false
+    const isLoggedIn = localStorage.getItem("loggedIn") === "true"
     const location = useLocation()
-     const message = 'You must log in to view this page.'
+
     if (!isLoggedIn) {
         return (
-            <Navigate 
-                to={`/login?message=${encodeURIComponent(message)}`}
-                state={{ message: "You must log in to view this page." }}
+            <Navigate
+                to={`/login?message=You must log in to view this page.`}
+                state={{ from: location }}
                 replace
             />
         )
     }
 
-    return <Outlet /> 
+    return <Outlet />
 }
