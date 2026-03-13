@@ -13,7 +13,7 @@ import { loginUser } from "../mirageLibrary/API";
 
 export function loader({ request }) {
   const url = new URL(request.url)
-  return url.searchParams.get("message")
+  return {message :url.searchParams.get("message"), expectedPath:url.searchParams.get('redirectTo') }
 }
 
 export async function action({ request }) {
@@ -39,21 +39,25 @@ export async function action({ request }) {
 
 
 export default function Login() {
-  const message = useLoaderData()
+  const {message,expectedPath} = useLoaderData()
   const result = useActionData()
-  const navigate = useNavigate()
+  const navigateToLogin = useNavigate();
+  const navigation = useNavigation();
+ 
+  
 
+  
    useEffect(() => {
     if (result?.success) {
-      navigate("/host/vans")
+      navigateToLogin(`${expectedPath?expectedPath:'/vans'}`);
     }
-  }, [result, navigate])
+  }, [result, navigateToLogin])
 
   return (
     <div className="login-container">
 
-      {message && <p>{message}</p>}
-      {result?.error && <p>{result.error}</p>}
+      {message && <p className="text-red-500 mt-10">{message}</p>}
+      {result?.error && <p className="text-red-500 mt-10">{result.error}</p>}
 
       <h1 className="font-bold text-3xl mt-10 mb-10">Sign in to your account</h1>
 
@@ -61,7 +65,7 @@ export default function Login() {
         <input name="email" type="email" placeholder="Email address" />
         <input name="password" type="password" placeholder="Password" />
 
-        <button>Log in</button>
+        <button disabled={navigation.state === "submitting"}  className={navigation.state == "submitting" ? 'bg-red-200' : 'bg-[#FF8C38]' }>{`${navigation.state == 'idle' ? 'Login' : navigation.state +'...'}`}</button>
       </Form>
     </div>
   )
