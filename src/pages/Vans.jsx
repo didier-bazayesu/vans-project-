@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react"
-import { Link, NavLink,useLoaderData, useSearchParams } from "react-router-dom" // Don't forget to import this!
+import { Link, NavLink,useLoaderData, useSearchParams,Await } from "react-router-dom" // Don't forget to import this!
+import { defer, Route } from "react-router";
 import getVans from "../mirageLibrary/API";
 
 
 
+
 export function loader(){
-    return  getVans()
+    const vansDefer  =  getVans();
+    return defer({vans: vansDefer}) ;
+
 }
 
 export default function Vans() {
@@ -18,8 +22,8 @@ export default function Vans() {
     const vans = useLoaderData();
      
     const displayedVans = type
-    ? vans.filter(van => van.type === type)
-    : vans
+    ? vans.vans.filter(van => van.type === type)
+    : vans.vans
 
     const vanElements =(displayedVans || []).map(van => {
         // Handle logic for colors before the return
