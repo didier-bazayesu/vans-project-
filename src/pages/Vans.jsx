@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react"
-import { Link, NavLink,useLoaderData, useSearchParams,Await } from "react-router-dom" // Don't forget to import this!
-import { defer, Route } from "react-router";
+import { Suspense, useEffect, useState } from "react"
+import { Await, Link, NavLink,useLoaderData, useSearchParams } from "react-router-dom" // Don't forget to import this!
 import getVans from "../mirageLibrary/API";
+import isLoading from "../help/HelperFunction";
 
 
 
 
-export function loader(){
-    const vansDefer  =  getVans();
-    return defer({vans: vansDefer}) ;
+ export async function loader(){
+    
+    const slowData = getVans();
+ return {
+  
+        slowData : slowData
+    }
 
 }
 
@@ -19,57 +23,60 @@ export default function Vans() {
     type = type !== null? type.toLowerCase(): ''
 
 
-    const vans = useLoaderData();
+    const vans = useLoaderData()
+    
      
-    const displayedVans = type
-    ? vans.vans.filter(van => van.type === type)
-    : vans.vans
-
-    const vanElements =(displayedVans || []).map(van => {
-        // Handle logic for colors before the return
-        const typeClass = van.type === "simple" ? "bg-[#E17654]" : 
-                         van.type === "rugged" ? "bg-[#115E59]" : "bg-[#161616]"
-
-        return (
-            <div key={van.id} className="van-tile group">
-                {/* Wrap the content in a Link to make it clickable */}
-                <Link 
-                 to={`${van.id}`} 
-                 className="text-inherit no-underline"
-                 state={{search :`?${params.toString()}`,name: `${type}`}}
-                >
-
-                    <img 
-                        src={van.imageUrl} 
-                        className="w-full aspect-square rounded-lg object-cover" 
-                        alt={van.name}
-                    />
-                    <div className="flex justify-between items-start mt-4">
-                        <h3 className="text-xl font-bold">{van.name}</h3>
-                        <p className="flex flex-col text-right">
-                            <span className="text-lg font-semibold">${van.price}</span>
-                            <span className="text-sm font-light">/day</span>
-                        </p>
+    
+    function handledeferSuspenceData(slowData) {
+        if(slowData) {
+            const displayedVans = type
+            ? slowData.filter(van => van.type === type)
+            : slowData
+            const vanElements =(displayedVans || []).map(van => {
+                // Handle logic for colors before the return
+                const typeClass = van.type === "simple" ? "bg-[#E17654]" : 
+                                 van.type === "rugged" ? "bg-[#115E59]" : "bg-[#161616]"
+        
+                return (
+                    <div key={van.id} className="van-tile group">
+                        {/* Wrap the content in a Link to make it clickable */}
+                        <Link 
+                         to={`${van.id}`} 
+                         className="text-inherit no-underline"
+                         state={{search :`?${params.toString()}`,name: `${type}`}}
+                        >
+        
+                            <img 
+                                src={van.imageUrl} 
+                                className="w-full aspect-square rounded-lg object-cover" 
+                                alt={van.name}
+                            />
+                            <div className="flex justify-between items-start mt-4">
+                                <h3 className="text-xl font-bold">{van.name}</h3>
+                                <p className="flex flex-col text-right">
+                                    <span className="text-lg font-semibold">${van.price}</span>
+                                    <span className="text-sm font-light">/day</span>
+                                </p>
+                            </div>
+                            <i className={`mt-2 py-2 px-6 rounded-md text-white not-italic inline-block font-semibold capitalize ${typeClass}`}>
+                                {van.type}
+                            </i>
+                        </Link>
                     </div>
-                    <i className={`mt-2 py-2 px-6 rounded-md text-white not-italic inline-block font-semibold capitalize ${typeClass}`}>
-                        {van.type}
-                    </i>
-                </Link>
-            </div>
-        )
-    })
+                )
+            })
+            return vanElements.length > 0 ? vanElements : <p className="text-center col-span-3 text-gray-500">No vans found for the selected type.</p>
+        }else {
+            return null;
+        }
+        
+
+    }
 
 
-    // if(error) return <div aria-live="polite">
-    //                       <p className="font-bold"> {`Error${error.status} : `}  {error.message}</p>
-    //                       <Link className=" text-blue-500 underline" to='/'>return home</Link>
-    //                 </div> 
-    // if(isLoading) {
-    //     return  <div aria-live="assertive" className="flex flex-col items-center justify-center h-64 space-y-4">
-    //                 <div className="w-12 h-12 border-4 border-gray-200 border-t-[#FF8C38] rounded-full animate-spin"></div>
-    //                 <p className="text-gray-500 animate-pulse">Loading  all vans...</p>
-    //             </div>
-    // }
+
+
+   
     
     return (
         <> 
@@ -129,7 +136,12 @@ export default function Vans() {
             
                 
                 <div className="grid grid-cols-3 gap-8">
-                    {vanElements}
+                    <Suspense fallback={isLoading()}>
+                      <Await resolve={vans.slowData} errorElement={<p className="text-red-500 text-center col-span-3">Failed to load vans. Please try again later.</p>}>
+                        {handledeferSuspenceData}
+                      </Await>
+
+                    </Suspense>
                 </div>
             </div>
           
