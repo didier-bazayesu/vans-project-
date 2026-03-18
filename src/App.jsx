@@ -6,7 +6,7 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Vans,{loader as vansLoader} from './pages/Vans'
 import VanDetails,{loader as vanDetailsLoader} from './pages/VanDetails'
-
+///jj
 
 import Layqout from './components/Layout'
 import Income from './pages/host/Income'

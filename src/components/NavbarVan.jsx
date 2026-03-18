@@ -5,9 +5,9 @@ import Logout from '../pages/Logout'
 
 function NavbarVan() {
     return (
-        <header className=" flex justify-between items-center h-20 px-6 md:px-10 bg-[#db7f0e]">
+        <header className=" flex justify-between items-center h-20 px-6 md:px-10 bg-[#db7f0e] ">
           
-            <Link to='/' className="font-black text-2xl uppercase tracking-tighter">
+            <Link to='/' className="font-black text-2xl uppercase tracking-tighter px-5">
                 #VANLIFE
             </Link>
 
